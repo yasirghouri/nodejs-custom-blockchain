@@ -12,8 +12,10 @@ app.get("/blockchain", function (req, res) {
   res.send(yCoin);
 });
 app.post("/transaction", function (req, res) {
-  console.log(req.body);
-  res.send(`The amount of transaction is ${req?.body?.amount} coins.`);
+  const { amount, sender, recipient } = req?.body;
+  const blockIndex = yCoin.createNewTransaction(amount, sender, recipient);
+
+  res.json({ note: `Transaction will be added in block # ${blockIndex}` });
 });
 app.get("/mine", function (req, res) {
   res.send("Hello World");
