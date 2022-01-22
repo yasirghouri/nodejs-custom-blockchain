@@ -79,7 +79,15 @@ app.post("/register-and-broadcast-node", function (req, res) {
     });
 });
 
-app.post("/register-node", function (req, res) {});
+app.post("/register-node", function (req, res) {
+  const newNodeUrl = req?.body?.newNodeUrl;
+  const nodeNotAlreadyPresent = yCoin.netWorkNodes.indexOf(newNodeUrl) == -1;
+  const notCurrentNode = yCoin.currentNodeUrl !== newNodeUrl;
+  if (nodeNotAlreadyPresent && notCurrentNode)
+    yCoin.netWorkNodes.push(newNodeUrl);
+
+  res.json({ note: "New node registered successfully." });
+});
 
 app.post("/register-nodes-bulk", function (req, res) {});
 
