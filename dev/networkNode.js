@@ -1,11 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
+
 const Blockchain = require("./blockchain");
 const app = express();
-
 const yCoin = new Blockchain();
 const nodeAddress = uuidv4().split("-").join("");
+const port = process.argv[2];
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,6 +38,6 @@ app.get("/mine", function (req, res) {
   res.json({ note: "New block mined successfully", block: newBlock });
 });
 
-app.listen(3000, function () {
-  console.log("Listening to port 3000...");
+app.listen(port, function () {
+  console.log(`Listening to port ${port}...`);
 });
