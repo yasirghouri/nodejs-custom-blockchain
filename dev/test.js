@@ -2,12 +2,25 @@ const Blockchain = require("./blockchain");
 
 const myCoin = new Blockchain();
 
-myCoin.createNewBlock(123, "HAHA", "HEHE");
-myCoin.createNewTransaction(5, "John", "Cena");
-myCoin.createNewBlock(123, "HEHE", "HOHO");
-myCoin.createNewTransaction(5, "John", "Cena");
-myCoin.createNewTransaction(5, "John", "Cena");
-myCoin.createNewTransaction(5, "John", "Cena");
-myCoin.createNewBlock(123, "HEHE", "HOHO");
+const previousBlockHash = "ASDASDASDASDASDASDASD";
+const nonce = 16166;
+const currentBlockData = [
+  {
+    amount: 10,
+    sender: "asdasda",
+    recipient: "poaspdoiasd",
+  },
+  {
+    amount: 100,
+    sender: "asdasda",
+    recipient: "poaspdoiasd",
+  },
+  {
+    amount: 1000,
+    sender: "asdasda",
+    recipient: "poaspdoiasd",
+  },
+];
 
-console.log("MY COIN", myCoin);
+const hash = myCoin.hashBlock(previousBlockHash, currentBlockData, nonce);
+console.log("HASH", hash);
