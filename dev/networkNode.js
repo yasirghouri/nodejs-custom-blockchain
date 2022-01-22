@@ -43,7 +43,9 @@ app.get("/mine", function (req, res) {
 
 app.post("/register-and-broadcast-node", function (req, res) {
   const newNodeUrl = req?.body?.newNodeUrl;
-  if (yCoin.networkNodes.indexOf(newNodeUrl) == -1)
+  const nodeNotAlreadyPresent = yCoin.networkNodes.indexOf(newNodeUrl) == -1;
+  const notCurrentNode = yCoin.currentNodeUrl !== newNodeUrl;
+  if (nodeNotAlreadyPresent && notCurrentNode)
     yCoin.networkNodes.push(newNodeUrl);
 
   const registerNodesPromises = [];
