@@ -1,6 +1,6 @@
 const Blockchain = require("./blockchain");
 
-const myCoin = new Blockchain();
+const yCoin = new Blockchain();
 
 // const previousBlockHash = "ASDASDASDASDASDASDASD";
 // const currentBlockData = [
@@ -21,5 +21,5 @@ const myCoin = new Blockchain();
 //   },
 // ];
 
-// const hash = myCoin.hashBlock(previousBlockHash, currentBlockData, 135411);
-console.log("hash", myCoin);
+// const hash = yCoin.hashBlock(previousBlockHash, currentBlockData, 135411);
+console.log("hash", yCoin);
