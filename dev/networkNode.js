@@ -43,12 +43,12 @@ app.get("/mine", function (req, res) {
 
 app.post("/register-and-broadcast-node", function (req, res) {
   const newNodeUrl = req?.body?.newNodeUrl;
-  if (yCoin.netWorkNodes.indexOf(newNodeUrl) == -1)
-    yCoin.netWorkNodes.push(newNodeUrl);
+  if (yCoin.networkNodes.indexOf(newNodeUrl) == -1)
+    yCoin.networkNodes.push(newNodeUrl);
 
   const registerNodesPromises = [];
 
-  yCoin.netWorkNodes.forEach((netWorkNodeUrl) => {
+  yCoin.networkNodes.forEach((netWorkNodeUrl) => {
     const requestOptions = {
       uri: netWorkNodeUrl + "/register-node",
       method: "POST",
@@ -67,7 +67,7 @@ app.post("/register-and-broadcast-node", function (req, res) {
         uri: newNodeUrl + "/register-nodes-bulk",
         method: "POST",
         body: {
-          allNetworkNodes: [...yCoin.netWorkNodes, yCoin.currentNodeUrl],
+          allNetworkNodes: [...yCoin.networkNodes, yCoin.currentNodeUrl],
         },
         json: true,
       };
@@ -81,10 +81,10 @@ app.post("/register-and-broadcast-node", function (req, res) {
 
 app.post("/register-node", function (req, res) {
   const newNodeUrl = req?.body?.newNodeUrl;
-  const nodeNotAlreadyPresent = yCoin.netWorkNodes.indexOf(newNodeUrl) == -1;
+  const nodeNotAlreadyPresent = yCoin.networkNodes.indexOf(newNodeUrl) == -1;
   const notCurrentNode = yCoin.currentNodeUrl !== newNodeUrl;
   if (nodeNotAlreadyPresent && notCurrentNode)
-    yCoin.netWorkNodes.push(newNodeUrl);
+    yCoin.networkNodes.push(newNodeUrl);
 
   res.json({ note: "New node registered successfully." });
 });

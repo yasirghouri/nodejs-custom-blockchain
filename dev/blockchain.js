@@ -5,7 +5,7 @@ function Blockchain() {
   this.chain = [];
   this.pendingTransactions = [];
   this.currentNodeUrl = currentNodeUrl;
-  this.netWorkNodes = [];
+  this.networkNodes = [];
 
   this.createNewBlock(100, "0", "0"); // creating genesis block
 }
