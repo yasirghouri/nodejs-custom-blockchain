@@ -57,11 +57,35 @@ app.get("/mine", function (req, res) {
   const nonce = yCoin.proofOfWork(previousBlockHash, currentBlockData);
   const blockHash = yCoin.hashBlock(previousBlockHash, currentBlockData, nonce);
 
-  yCoin.createNewTransaction(12.5, "00", nodeAddress);
-
   const newBlock = yCoin.createNewBlock(nonce, previousBlockHash, blockHash);
 
-  res.json({ note: "New block mined successfully", block: newBlock });
+  const requestPromises = [];
+
+  yCoin.networkNodes.forEach((netWorkNodeUrl) => {
+    const requestOptions = {
+      uri: netWorkNodeUrl + "/recieve-new-block",
+      method: "POST",
+      body: { newBlock },
+      json: true,
+    };
+
+    requestPromises.push(rp(requestOptions));
+  });
+
+  Promise.all(requestPromises)
+    .then((data) => {
+      const requestOptions = {
+        uri: yCoin.currentNodeUrl + "/transaction/broadcast",
+        method: "POST",
+        body: { amount: 12.5, sender: "00", recipient: nodeAddress },
+        json: true,
+      };
+
+      return rp(requestOptions);
+    })
+    .then((data) => {
+      res.json({ note: "New block mined successfully", block: newBlock });
+    });
 });
 
 app.post("/register-and-broadcast-node", function (req, res) {
