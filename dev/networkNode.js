@@ -17,10 +17,10 @@ app.get("/blockchain", function (req, res) {
 });
 
 app.post("/transaction", function (req, res) {
-  const { amount, sender, recipient } = req?.body;
-  const blockIndex = yCoin.createNewTransaction(amount, sender, recipient);
+  const newTransaction = req?.body;
+  const blockIndex = yCoin.addTransactionToPendingTransactions(newTransaction);
 
-  res.json({ note: `Transaction will be added in block # ${blockIndex}` });
+  res.json({ note: `Transaction will be added to block # ${blockIndex}` });
 });
 
 app.post("/transaction/broadcast", function (req, res) {
