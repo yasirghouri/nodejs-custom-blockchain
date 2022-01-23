@@ -63,7 +63,7 @@ app.get("/mine", function (req, res) {
 
   yCoin.networkNodes.forEach((netWorkNodeUrl) => {
     const requestOptions = {
-      uri: netWorkNodeUrl + "/recieve-new-block",
+      uri: netWorkNodeUrl + "/receive-new-block",
       method: "POST",
       body: { newBlock },
       json: true,
@@ -89,6 +89,21 @@ app.get("/mine", function (req, res) {
         block: newBlock,
       });
     });
+});
+
+app.post("/receive-new-block", function (req, res) {
+  const newBlock = req?.body?.newBlock;
+  const lastBlock = yCoin.getLastBlock();
+  const correctHash = lastBlock.hash === newBlock.previousBlockHash;
+  const correctIndex = lastBlock["index"] + 1 === newBlock["index"];
+
+  if (correctHash && correctIndex) {
+    yCoin.chain.push(newBlock);
+    yCoin.pendingTransactions = [];
+    res.json({ note: "New block received and accepted.", newBlock });
+  } else {
+    res.json({ note: "New block rejected.", newBlock });
+  }
 });
 
 app.post("/register-and-broadcast-node", function (req, res) {
