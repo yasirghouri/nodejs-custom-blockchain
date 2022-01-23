@@ -23,6 +23,29 @@ app.post("/transaction", function (req, res) {
   res.json({ note: `Transaction will be added in block # ${blockIndex}` });
 });
 
+app.post("/transaction/broadcast", function (req, res) {
+  const { amount, sender, recipient } = req?.body;
+  const newTransaction = yCoin.createNewTransaction(amount, sender, recipient);
+  yCoin.addTransactionToPendingTransactions(newTransaction);
+
+  const requestPromises = [];
+
+  yCoin.networkNodes.forEach((netWorkNodeUrl) => {
+    const requestOptions = {
+      uri: netWorkNodeUrl + "/transaction",
+      method: "POST",
+      body: newTransaction,
+      json: true,
+    };
+
+    requestPromises.push(rp(requestOptions));
+  });
+
+  Promise.all(requestPromises).then((data) => {
+    res.json({ note: "Transaction created and broadcast successfully." });
+  });
+});
+
 app.get("/mine", function (req, res) {
   const lastBlock = yCoin.getLastBlock();
   const previousBlockHash = lastBlock["hash"];
