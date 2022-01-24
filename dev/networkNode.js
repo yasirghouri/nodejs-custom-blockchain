@@ -170,6 +170,50 @@ app.post("/register-nodes-bulk", function (req, res) {
   res.json({ note: "Bulk registration successful." });
 });
 
+app.post("/consensus", function (req, res) {
+  const requestPromises = [];
+
+  yCoin.networkNodes.forEach((netWorkNodeUrl) => {
+    const requestOptions = {
+      uri: netWorkNodeUrl + "/blockchain",
+      method: "GET",
+      json: true,
+    };
+
+    requestPromises.push(rp(requestOptions));
+  });
+
+  Promise.all(requestPromises).then((blockchains) => {
+    const currentChainLength = yCoin.chain.length;
+    let maxChainLength = currentChainLength;
+    let newLongestChain = null;
+    let newPendingTransactions = null;
+
+    blockchains.forEach((blockchain) => {
+      if (blockchain.chain.length > maxChainLength) {
+        maxChainLength = blockchain.chain.length;
+        newLongestChain = blockchain.chain;
+        newPendingTransactions = blockchain.pendingTransactions;
+      }
+    });
+
+    if (
+      !newLongestChain ||
+      (newLongestChain && !yCoin.chainIsValid(newLongestChain))
+    ) {
+      res.json({
+        note: "Current chain has not been replaced.",
+        chain: yCoin.chain,
+      });
+    } else {
+      yCoin.chain = newLongestChain;
+      yCoin.pendingTransactions = newPendingTransactions;
+
+      res.json({ note: "This chain has been replaced.", chain: yCoin.chain });
+    }
+  });
+});
+
 app.listen(port, function () {
   console.log(`Listening to port ${port}...`);
 });
