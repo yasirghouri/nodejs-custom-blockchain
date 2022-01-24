@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { v4: uuidv4 } = require("uuid");
 const rp = require("request-promise");
+const path = require("path");
 
 const Blockchain = require("./blockchain");
 const app = express();
@@ -238,6 +239,10 @@ app.get("/address/:address", function (req, res) {
   res.json({
     addressData,
   });
+});
+
+app.get("/block-explorer", function (req, res) {
+  res.sendFile(path.resolve("client/index.html"));
 });
 
 app.listen(port, function () {
