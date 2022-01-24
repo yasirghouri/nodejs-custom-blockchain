@@ -170,7 +170,7 @@ app.post("/register-nodes-bulk", function (req, res) {
   res.json({ note: "Bulk registration successful." });
 });
 
-app.post("/consensus", function (req, res) {
+app.get("/consensus", function (req, res) {
   const requestPromises = [];
 
   yCoin.networkNodes.forEach((netWorkNodeUrl) => {
@@ -212,6 +212,18 @@ app.post("/consensus", function (req, res) {
       res.json({ note: "This chain has been replaced.", chain: yCoin.chain });
     }
   });
+});
+
+app.get("/block/:blockHash", function (req, res) {
+  const blockHash = req?.params?.blockHash;
+});
+
+app.get("/transaction/:transactionId", function (req, res) {
+  const transactionId = req.params.transactionId;
+});
+
+app.get("/address/:address", function (req, res) {
+  const address = req.params.address;
 });
 
 app.listen(port, function () {
